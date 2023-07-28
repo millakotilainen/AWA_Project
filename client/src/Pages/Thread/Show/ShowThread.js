@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {useParams, useHistory, Link} from 'react-router-dom';
 import HttpClient from "../../../Services/HttpClient";
 import AppContext from "../../../Contexts/AppContext";
-//import Button from "../../../Components/Button/Button";
 import { List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+
+
  
 
 export default function(){
@@ -17,12 +18,12 @@ export default function(){
     const [hasMore, setHasMore] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
     const [replyContent, setReplyContent] = useState("");
+    const [searchKeyword, setSearchKeyword] = useState('');
 
     useEffect(() => {
         setThread(null);
         setComments([]);
         getThread();
-        //getCommentsFromLocalStorage();
     }, [id]);
 
     const getThread = async () => {
@@ -37,7 +38,7 @@ export default function(){
                 params: { page: pageNumber },
               });
             
-            if (data && data.length) { // Add null check here
+            if (data && data.length) { 
                 setComments([...comments, ...data]);
                 setPage(page + 1);
                 setHasMore(true);
@@ -63,11 +64,17 @@ export default function(){
         };
 
         const response = await HttpClient().post("/api/comment/create", data);
-        //setComments([...comments, response.data]);
         const updatedComments = [...comments, response.data];
         setComments(updatedComments);
     };
+
+    const handleSearch = (event) => {
+        setSearchKeyword(event.target.value);
+    };
     
+    const filteredComments = comments.filter((comments) =>
+        comments.comment.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
 
     return(
         <div className="page">
@@ -76,7 +83,9 @@ export default function(){
             {thread && <p className="page__description">{thread.description}</p>}
 
             <List>
-                {comments.map((comment, index) => (
+                <input className="search-input" type="text" value={searchKeyword} onChange={handleSearch} placeholder="Search Comments" />
+
+                {filteredComments.map((comment, index) => (
                     <ListItem key={index}>
                         <ListItemText primary={comment.comment} secondary={comment.createdAt}/>
                     </ListItem>

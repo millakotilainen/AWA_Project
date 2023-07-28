@@ -8,6 +8,7 @@ const Home = () => {
     const [threads, setThreads] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
 
     useEffect(() => {
         getThreads();
@@ -34,6 +35,14 @@ const Home = () => {
         getThreads(page);
     };
 
+    const handleSearch = (event) => {
+        setSearchKeyword(event.target.value);
+    };
+    
+    const filteredThreads = threads.filter((thread) =>
+        thread.title.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+
     return (
         <>
             <main className='home'>
@@ -42,7 +51,8 @@ const Home = () => {
                 <Button className='mb-1' onClick={() => history.push('/thread/create')}>Create a thread</Button>
 
                 <div className="list"> 
-                    {threads.map((thread, index) => (
+                    <input className="search-input" type="text" value={searchKeyword} onChange={handleSearch} placeholder="Search Threads" />
+                    {filteredThreads.map((thread, index) => (
                         <div className="list__item" key={index}>
                             <Link to={`/thread/${thread._id}`} className="list__link"> {thread.title} </Link>
                         </div>

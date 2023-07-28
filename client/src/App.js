@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import AppContext from './Contexts/AppContext';
 import Home from "./Pages/Home/Home";
-
 import "./Components/Page/Page.css";
 import "./Components/Form/Form.css";
 import Navbar from './Components/Navbar/Navbar';
@@ -12,7 +11,9 @@ import Profile from './Pages/Profile/Profile';
 import CreateThread from './Pages/Thread/Create/CreateThread';
 import HttpClient from './Services/HttpClient';
 import "./CommonCss/List/List.css";
+import "./CommonCss/Search/Search.css";
 import ShowThread from './Pages/Thread/Show/ShowThread';
+
 
 const App = () => {
   useEffect(() => {

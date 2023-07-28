@@ -4,3 +4,15 @@
     justify-content: center;
     grid-template-columns: repeat(3, 300px);
 }
+
+@media screen and (max-width: 768px) {
+    .profile__buttons {
+        grid-template-columns: repeat(2, 250px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .profile__buttons {
+        grid-template-columns: 1fr;
+    }
+}
