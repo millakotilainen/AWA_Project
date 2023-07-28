@@ -20,9 +20,9 @@ export default function(){
 
     useEffect(() => {
         setThread(null);
-        //setComments([]);
+        setComments([]);
         getThread();
-        getCommentsFromLocalStorage();
+        //getCommentsFromLocalStorage();
     }, [id]);
 
     const getThread = async () => {
@@ -31,47 +31,42 @@ export default function(){
         getComments();
     }
 
-    const getComments = async () => {
-        const {data} = await HttpClient().get('/api/comment/thread/'+id);
-        if(data.data.length){
-            //setComments(data);
-            setComments([...comments, ...data.data]);
-            setPage(page + 1);
-            setHasMore(true);
-        } else {
-            setHasMore(false);
+    const getComments = async (pageNumber) => {
+        try {
+            const { data } = await HttpClient().get('/api/comment/thread/' + id, {
+                params: { page: pageNumber },
+              });
+            
+            if (data && data.length) { // Add null check here
+                setComments([...comments, ...data]);
+                setPage(page + 1);
+                setHasMore(true);
+            } else {
+                setHasMore(false);
+            }
+          } catch (error) {
+            console.error(error);
         }
     }
 
-    const getCommentsFromLocalStorage = () => {
-        const storedComments = localStorage.getItem('comments');
-        if (storedComments) {
-          setComments(JSON.parse(storedComments));
-        }
+    const handleLoadMoreComments = () => {
+        getComments(page);
     };
 
     const handleReply = async event => {
         event.preventDefault();
-
         if(!replyContent) return;
         const data = {
-            author: user._id,
             threadId: thread._id,
             comment: replyContent,
+            author: user._id,
         };
 
         const response = await HttpClient().post("/api/comment/create", data);
         //setComments([...comments, response.data]);
         const updatedComments = [...comments, response.data];
         setComments(updatedComments);
-        saveCommentsToLocalStorage(updatedComments);
-
     };
-
-    const saveCommentsToLocalStorage = (comments) => {
-        localStorage.setItem('comments', JSON.stringify(comments));
-    };
-    
     
 
     return(
@@ -89,7 +84,7 @@ export default function(){
                 ))}
             </List>
 
-            <Button variant="contained" color="primary" disabled={!hasMore} onClick={getComments}>Load more comments</Button>
+            <Button variant="contained" color="primary" disabled={!hasMore} onClick={handleLoadMoreComments}>Load more comments</Button>
             {user && <Button variant="contained" color="primary" onClick={() => setIsReplying(true)}>Reply</Button>}
             {isReplying && (
                 <form onSubmit={handleReply}>

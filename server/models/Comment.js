@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
-    threadId: mongoose.ObjectId,
+    threadId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Thread', 
+        required: true, 
+    },
     comment: String, 
     createdAt: {
         default: Date.now(),

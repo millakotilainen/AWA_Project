@@ -6,7 +6,7 @@ const protected = require('../middleware/Protected');
 
 router.post('/create', protected, async (req,res) => {
     const newComment = Comment({
-        threadId: req.body.thread,
+        threadId: req.body.threadId,
         comment: req.body.comment,
         author: req.userId,
     });
@@ -21,10 +21,13 @@ router.get('/thread/:id', async (req, res) => {
         return res.sendStatus(404);
     }
 
-    const page = req.query.page;
+    const page = parseInt(req.query.page) || 1;
     const perPage = 10;
-    const skip = perPage * (page - 1);
-    const comment = await Comment.find({threadId: req.params.id})
+    const threadId = req.params.id;
+
+    const skip = (page - 1) * perPage;
+
+    const comment = await Comment.find({threadId})
         .limit(perPage)
         .skip(skip).exec();
     res.send(comment);

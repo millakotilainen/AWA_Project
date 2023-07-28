@@ -6,14 +6,32 @@ import {Link, useHistory} from 'react-router-dom';
 const Home = () => {
     const history = useHistory();
     const [threads, setThreads] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
 
     useEffect(() => {
         getThreads();
     }, []);
 
-    const  getThreads = async () => {
-        const {data} = await HttpClient().get('/api/thread');
-        setThreads(data);
+    const  getThreads = async (pageNumber) => {
+        try{
+            const {data} = await HttpClient().get('/api/thread', {
+                params: { page: pageNumber },
+                });
+            if (data && data.length) {
+                setThreads([...threads, ...data]);
+                setPage(page + 1);
+                setHasMore(true);
+            } else {
+                setHasMore(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleLoadMoreThreads = () => {
+        getThreads(page);
     };
 
     return (
@@ -30,7 +48,7 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
-                
+                <Button variant="contained" color="primary" disabled={!hasMore} onClick={handleLoadMoreThreads}>Load more threads</Button>
             </main>
         </>
     );

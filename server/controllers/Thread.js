@@ -21,7 +21,13 @@ router.post('/create', protected, async (req,res) => {
 });
 
 router.get('/', async (req, res) => {
-    const threads = await Thread.find();
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 10;
+    const skip = (page - 1) * perPage;
+
+    const threads = await Thread.find()
+        .limit(perPage)
+        .skip(skip).exec();;
     res.send(threads);
 });
 
