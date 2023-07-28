@@ -1,0 +1,29 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.form__group {
+    width: 100%;
+}
+
+.form__input {
+    width: 100%;
+    border: 1px solid #3F51B5;
+    padding: 10px;
+    margin-bottom: 1rem;
+}
+
+.form__label {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form__description{
+    width: 100%;
+    border: 1px solid #3F51B5;
+    height: 200px;
+}

@@ -1,0 +1,23 @@
+.page {
+    width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page__title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: normal;
+}
+
+.page__description{
+    text-align: center;
+    font-size: 24px;
+    padding: 1rem;
+}
+
+.page__author{
+    text-align: center;
+    font-size: 16px;
+    color: #6e6d6d;
+}
