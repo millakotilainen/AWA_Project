@@ -8,11 +8,14 @@ import HttpClient from "../../Services/HttpClient";
 
 export default function (){
     const history = useHistory();
+    // Get the 'setUser' function from the AppContext to update the user context
     const {setUser} = useContext(AppContext);
+    // State variables to store the user's email, password, and any form errors
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
 
+     // Function to handle form submission
     const onSubmit = async event => {
         event.preventDefault();
         setErrors([]);
@@ -30,10 +33,12 @@ export default function (){
                 email,
                 password
             };
+            // Make a POST request to the server to log in the user
             const response = await HttpClient().post('/api/user/login', data);
             setUser(response.data.user);
+            // Save the token in the local storage
             localStorage.setItem("token", response.data.token);
-            
+            // Redirect the user to the home page after successful login
             window.location = '/';
         } catch (e) {
             setErrors([e.response.data.message]);

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import AppContext from './Contexts/AppContext';
 import Home from "./Pages/Home/Home";
-
 import "./Components/Page/Page.css";
 import "./Components/Form/Form.css";
 import Navbar from './Components/Navbar/Navbar';
@@ -12,22 +11,26 @@ import Profile from './Pages/Profile/Profile';
 import CreateThread from './Pages/Thread/Create/CreateThread';
 import HttpClient from './Services/HttpClient';
 import "./CommonCss/List/List.css";
+import "./CommonCss/Search/Search.css";
 import ShowThread from './Pages/Thread/Show/ShowThread';
+
 
 const App = () => {
   useEffect(() => {
     init();
   }, []);
 
-
+  // State variables to handle user authentication and app initialization
   const [isInitiated, setIsInitiated] = useState(false);
   const [user, setUser] = useState(null);
 
+  // Function to log out the user by setting the 'user' state to null and clearing the token from local storage
   const logout = () => {
       setUser(null);
       localStorage.setItem("token", null);
   };
 
+    // Function to initialize the app by fetching user information from the server using JWT token
   const init = async () => {
     const {data} = await HttpClient().get('/api/user/init');
     setUser(data.user);

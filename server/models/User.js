@@ -13,6 +13,8 @@ const UserSchema = new Schema({
     Role: String,
 });
 
+// Pre-save hook on the UserSchema:
+// hashes the user's password before saving it to the database
 UserSchema.pre('save', async function (next) {
     const user = this;
     if (!user.isModified('password')) return next();

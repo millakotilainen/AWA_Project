@@ -1,8 +1,10 @@
 .list__item {
+    margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
 }
+ 
 
 .list__item:last-child{
     border-bottom: 1px solid #ccc;

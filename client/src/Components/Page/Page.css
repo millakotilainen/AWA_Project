@@ -1,19 +1,52 @@
 .page {
     width: 60%;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .page__title {
     text-align: center;
     font-size: 42px;
     font-weight: normal;
+
+    @media (max-width: 768px) {
+
+        font-size: 42px;
+    }
+
+    @media (max-width: 576px) {
+        font-size: 36px;
+    }
+
+    @media (max-width: 414px) {
+        font-size: 30px;
+    }
 }
 
 .page__description{
     text-align: center;
     font-size: 24px;
     padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 70%;
+    margin: 0 auto;
+    
+
+    @media (max-width: 768px) {
+        width: 80%;
+        font-size: 18px;
+    }
+
+    @media (max-width: 576px) {
+        width: 90%; 
+        font-size: 16px;
+    }
+
+    @media (max-width: 414px) {
+        width: 95%;
+        font-size: 14px;
+    }
 }
 
 .page__author{

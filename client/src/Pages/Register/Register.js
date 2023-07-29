@@ -7,13 +7,16 @@ import {useHistory} from 'react-router-dom';
 import HttpClient from "../../Services/HttpClient";
 
 export default function (){
+    // Get the 'history' object from 'react-router-dom' to handle navigation
     const history = useHistory();
+    // State variables to store user's name, email, password, password confirmation and any errors
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordAgain, setPasswordAgain] = useState("");
     const [errors, setErrors] = useState([]);
 
+    // Function to handle form submission
     const onSubmit = async event => {
         event.preventDefault();
         setErrors([]);
@@ -34,7 +37,9 @@ export default function (){
         };
 
         try{
+            // Send a POST request to the server to register the user
             await HttpClient().post('/api/user/register', data);
+            // If registration is successful, redirect the user to the login page
             history.push('/auth/login');
         } catch (e) {
             setErrors([e.response.data.message]);

@@ -2,77 +2,78 @@ import React, { useContext, useEffect, useState } from "react";
 import {useParams, useHistory, Link} from 'react-router-dom';
 import HttpClient from "../../../Services/HttpClient";
 import AppContext from "../../../Contexts/AppContext";
-//import Button from "../../../Components/Button/Button";
 import { List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
- 
 
 export default function(){
-    const history = useHistory();
     const {user} = useContext(AppContext);
     const {id} = useParams();
+    // State variables to store thread data, comment data, manage pagination, control reply, manage comment search
     const [thread, setThread] = useState(null);
     const [comments, setComments] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
     const [replyContent, setReplyContent] = useState("");
+    const [searchKeyword, setSearchKeyword] = useState('');
 
     useEffect(() => {
         setThread(null);
-        //setComments([]);
+        setComments([]);
         getThread();
-        getCommentsFromLocalStorage();
     }, [id]);
 
     const getThread = async () => {
+        // Get the thread data
         const {data} = await HttpClient().get('/api/thread/'+id);
         setThread(data);
         getComments();
     }
 
-    const getComments = async () => {
-        const {data} = await HttpClient().get('/api/comment/thread/'+id);
-        if(data.data.length){
-            //setComments(data);
-            setComments([...comments, ...data.data]);
-            setPage(page + 1);
-            setHasMore(true);
-        } else {
-            setHasMore(false);
+    const getComments = async (pageNumber) => {
+        try {
+            const { data } = await HttpClient().get('/api/comment/thread/' + id, {
+                params: { page: pageNumber },
+              });
+            
+            if (data && data.length) { 
+                // Add fetched comments to the existing ones
+                setComments([...comments, ...data]);
+                setPage(page + 1);
+                setHasMore(true);
+            } else {
+                setHasMore(false);
+            }
+          } catch (error) {
+            console.error(error);
         }
     }
 
-    const getCommentsFromLocalStorage = () => {
-        const storedComments = localStorage.getItem('comments');
-        if (storedComments) {
-          setComments(JSON.parse(storedComments));
-        }
+    const handleLoadMoreComments = () => {
+        getComments(page);
     };
 
     const handleReply = async event => {
         event.preventDefault();
-
         if(!replyContent) return;
         const data = {
-            author: user._id,
             threadId: thread._id,
             comment: replyContent,
+            author: user._id,
         };
 
         const response = await HttpClient().post("/api/comment/create", data);
-        //setComments([...comments, response.data]);
         const updatedComments = [...comments, response.data];
         setComments(updatedComments);
-        saveCommentsToLocalStorage(updatedComments);
-
     };
 
-    const saveCommentsToLocalStorage = (comments) => {
-        localStorage.setItem('comments', JSON.stringify(comments));
+    const handleSearch = (event) => {
+        setSearchKeyword(event.target.value);
     };
     
-    
+    const filteredComments = comments.filter((comments) =>
+        comments.comment.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
 
     return(
         <div className="page">
@@ -81,7 +82,9 @@ export default function(){
             {thread && <p className="page__description">{thread.description}</p>}
 
             <List>
-                {comments.map((comment, index) => (
+                <input className="search-input" type="text" value={searchKeyword} onChange={handleSearch} placeholder="Search Comments" />
+
+                {filteredComments.map((comment, index) => (
                     <ListItem key={index}>
                         <ListItemText primary={comment.comment} secondary={comment.createdAt}/>
                     </ListItem>
@@ -89,7 +92,7 @@ export default function(){
                 ))}
             </List>
 
-            <Button variant="contained" color="primary" disabled={!hasMore} onClick={getComments}>Load more comments</Button>
+            <Button variant="contained" color="primary" disabled={!hasMore} onClick={handleLoadMoreComments}>Load more comments</Button>
             {user && <Button variant="contained" color="primary" onClick={() => setIsReplying(true)}>Reply</Button>}
             {isReplying && (
                 <form onSubmit={handleReply}>
