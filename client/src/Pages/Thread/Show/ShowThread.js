@@ -5,13 +5,10 @@ import AppContext from "../../../Contexts/AppContext";
 import { List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
-
- 
-
 export default function(){
-    const history = useHistory();
     const {user} = useContext(AppContext);
     const {id} = useParams();
+    // State variables to store thread data, comment data, manage pagination, control reply, manage comment search
     const [thread, setThread] = useState(null);
     const [comments, setComments] = useState([]);
     const [page, setPage] = useState(1);
@@ -27,6 +24,7 @@ export default function(){
     }, [id]);
 
     const getThread = async () => {
+        // Get the thread data
         const {data} = await HttpClient().get('/api/thread/'+id);
         setThread(data);
         getComments();
@@ -39,6 +37,7 @@ export default function(){
               });
             
             if (data && data.length) { 
+                // Add fetched comments to the existing ones
                 setComments([...comments, ...data]);
                 setPage(page + 1);
                 setHasMore(true);

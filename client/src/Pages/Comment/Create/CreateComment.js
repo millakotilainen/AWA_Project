@@ -6,24 +6,31 @@ import AppContext from "../../../Contexts/AppContext";
 import { useHistory, useParams } from "react-router-dom";
 
 export default function() {
+    // Get the 'threadId' parameter from the URL using 'useParams' hook
     const [threadId] = useParams();
+    // Get the 'history' object from 'react-router-dom' to handle navigation
     const history = useHistory();
+    // State variables to store form errors, title, and description
     const [errors, setErrors] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
+    // Function to handle form submission
     const onSubmit = async event => {
         event.preventDefault();
         setErrors([]);
 
         if (!description) return setErrors(['Description is required']);
 
+        // Prepare the data to be sent in the POST request
         const data = {
             threadId,
             description
         };
 
+        // Make a POST request to create a new comment using the 'HttpClient' service
         const response = await HttpClient().post('/api/thread/create', data);
+        // Redirect to the newly created thread's page
         history.push(`/thread/${response.data._id}`);
     }
 

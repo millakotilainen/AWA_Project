@@ -16,6 +16,10 @@ const commentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+    editable: {
+        type: Boolean,
+        default: false, 
+    },
     /*upvotes: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User",

@@ -8,10 +8,11 @@ import { useHistory } from "react-router-dom";
 
 export default function() {
     const history = useHistory();
+    // State variables to store errors, thread title and thread description
     const [errors, setErrors] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-
+    // Function to handle form submission
     const onSubmit = async event => {
         event.preventDefault();
         setErrors([]);
@@ -24,8 +25,9 @@ export default function() {
             title,
             description
         };
-
+        // Send a request to create the new thread
         const response = await HttpClient().post('/api/thread/create', data);
+        // Redirect the user to the newly created thread's page
         history.push(`/thread/${response.data._id}`);
     }
 

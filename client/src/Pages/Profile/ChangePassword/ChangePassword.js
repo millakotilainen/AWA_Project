@@ -6,13 +6,16 @@ import AppContext from "../../../Contexts/AppContext";
 import axios from "axios";
 
 export default function ({isOpen, onClose}) {
+    // Get the 'user' and 'setUser' functions from the AppContext
     const {user, setUser} = useContext(AppContext);
+    // State variables to manage the state of the modal, store the current and new passwords, and handle any form validation errors
     const [isModalOpen, setModalOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [password, setPassword] = useState("");
     const [passwordAgain, setPasswordAgain] = useState("");
     const [errors, setErrors] = useState([]);
 
+    // Function to handle form submission
     const onSubmit = async event => {
         event.preventDefault();
         setErrors([]);
@@ -32,8 +35,11 @@ export default function ({isOpen, onClose}) {
         };
 
         try {
+            // Make a POST request to the server's '/api/user/change-password' endpoint to update the user's password
             await axios.post('/api/user/change-password', data);
+            // Close the modal after a successful password change
             onClose();
+            // Clear the input fields for current password, new password, and password confirmation
             setCurrentPassword("");
             setPassword("");
             setPasswordAgain("");
@@ -43,10 +49,12 @@ export default function ({isOpen, onClose}) {
         
     };
 
+    // Function to close the modal
     const closeModal = () => {
         onClose();
     };
 
+    // Update the state of the modal when the 'isOpen' prop changes
     useEffect(() => {
         setModalOpen(isOpen);
     }, [isOpen]);

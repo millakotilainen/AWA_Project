@@ -20,15 +20,17 @@ const App = () => {
     init();
   }, []);
 
-
+  // State variables to handle user authentication and app initialization
   const [isInitiated, setIsInitiated] = useState(false);
   const [user, setUser] = useState(null);
 
+  // Function to log out the user by setting the 'user' state to null and clearing the token from local storage
   const logout = () => {
       setUser(null);
       localStorage.setItem("token", null);
   };
 
+    // Function to initialize the app by fetching user information from the server using JWT token
   const init = async () => {
     const {data} = await HttpClient().get('/api/user/init');
     setUser(data.user);

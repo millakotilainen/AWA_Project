@@ -7,6 +7,7 @@ import ChangeEmail from "./ChangeEmail/ChangeEmail";
 import ChangePassword from "./ChangePassword/ChangePassword";
 
 export default function() {
+    // State variables to manage the open/close state of the modals for changing name, email, and password
     const [isNameOpen, setNameOpen] = useState(false);
     const [isEmailOpen, setEmailOpen] = useState(false);
     const [isPasswordOpen, setPasswordOpen] = useState(false);
